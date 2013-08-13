@@ -1,0 +1,1 @@
+Unpack Gnomoria data files to json. Make sure to update ContentRoot and OutputPath in app.config
