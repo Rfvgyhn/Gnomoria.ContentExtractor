@@ -189,13 +189,13 @@ namespace Gnomoria.ContentExtractor
 
         private void UnpackSkin()
         {
-            var skins = new DirectoryInfo(contentRoot).EnumerateFiles("*.skin", SearchOption.AllDirectories);
-            var tempDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "temp");
+            var skins = File.Exists(options.Source) ? new FileInfo[] { new FileInfo(options.Source) } : new DirectoryInfo(contentRoot).EnumerateFiles("*.skin", SearchOption.AllDirectories);
+            var tempDir = Content.RootDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "temp");
 
             foreach (var skin in skins)
             {
                 var skinName = Path.GetFileNameWithoutExtension(skin.Name);
-                var skinRoot = Content.RootDirectory = Path.Combine(tempDir, skinName);
+                var skinRoot  = Path.Combine(tempDir, skinName);
                 var rootDestination = Path.Combine(options.Destination, skinName);
 
                 logger.Info("Unpacking skin '{0}'", skinName);
@@ -226,7 +226,7 @@ namespace Gnomoria.ContentExtractor
                 foreach (var image in images)
                 {
                     var name = Path.GetFileNameWithoutExtension(image.Name);
-                    var texture = Content.Load<Texture2D>("Images/" + name);
+                    var texture = Content.Load<Texture2D>(skinName + "/Images/" + name);
 
                     using (var png = File.Create(Path.Combine(destination, name + ".png")))
                     {
@@ -250,9 +250,8 @@ namespace Gnomoria.ContentExtractor
                 logger.Debug("Copying cursors");
                 // not implemented. just copy them instead
                 destination = Path.Combine(rootDestination, "Cursors");
-                Directory.CreateDirectory(destination);
-
                 var cursors = new DirectoryInfo(Path.Combine(skinRoot, "Cursors")).EnumerateFiles("*.xnb", SearchOption.AllDirectories);
+                Directory.CreateDirectory(destination);
 
                 foreach (var cursor in cursors)
                 {
