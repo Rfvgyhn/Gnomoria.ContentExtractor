@@ -160,6 +160,7 @@
     </Content>
     <None Include="lib\Microsoft.Xna.GameStudio.ContentPipeline.targets">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="lib\readme.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

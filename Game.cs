@@ -94,8 +94,8 @@ namespace Gnomoria.ContentExtractor
             {
                 var pathMap = new Dictionary<DataType, string>
                 {
-                    { DataType.Data, @"Data\" },
-                    { DataType.Skin, @"UI\" }
+                    { DataType.Data, @"Data" },
+                    { DataType.Skin, @"UI" }
                 };
                 options.Source = Path.Combine(ConfigurationManager.AppSettings["ContentRoot"], pathMap[dataType]);
                 logger.Info("Source not specified. Using default '{0}'", options.Source);
@@ -108,6 +108,9 @@ namespace Gnomoria.ContentExtractor
                 this.Exit();
                 return "";
             }
+
+            if (Directory.Exists(options.Source))
+                options.Source = options.Source.EnsureEndsWith(Path.DirectorySeparatorChar);
 
             return Path.GetDirectoryName(options.Source);
         }

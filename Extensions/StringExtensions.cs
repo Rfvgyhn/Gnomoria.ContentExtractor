@@ -11,5 +11,18 @@ namespace Gnomoria.ContentExtractor.Extensions
         {
             return string.Format(format, args);
         }
+
+        public static string EnsureEndsWith(this string str, string value)
+        {
+            if (!str.EndsWith(value))
+                return str + value;
+
+            return str;
+        }
+
+        public static string EnsureEndsWith(this string str, char value)
+        {
+            return EnsureEndsWith(str, value.ToString());
+        }
     }
 }
