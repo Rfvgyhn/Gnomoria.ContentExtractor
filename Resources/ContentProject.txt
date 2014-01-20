@@ -11,26 +11,16 @@
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
 	<XNAContentPipelineTargetPlatform>Windows</XNAContentPipelineTargetPlatform>
 	<XNAContentPipelineTargetProfile>Reach</XNAContentPipelineTargetProfile>
-    <!--<OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>-->
 	<OutputPath>$(OutputPath)</OutputPath>
   </PropertyGroup>
-  <!--<PropertyGroup>
-    <RootNamespace>Content1</RootNamespace>
-  </PropertyGroup>-->
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.TextureImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL">
       <Private>False</Private>
+	  <HintPath>lib\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
 	{0}
   </ItemGroup>
   <Import Project="lib\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

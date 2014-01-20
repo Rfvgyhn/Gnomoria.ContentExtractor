@@ -93,26 +93,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
       <Output ItemName="XNARebuiltContentFiles" TaskParameter="RebuiltContentFiles"/>
     </BuildContent>
 
-    <!-- Build the XACT content. -->
-    <BuildXact
-      BuildConfiguration="$(Configuration)"
-      IntermediateDirectory="$(ProjectDir)$(IntermediateOutputPath)"
-      OutputDirectory="$(ParentOutputDir)$(ContentRootDirectory)"
-      RebuildAll="$(XNARebuildContent)"
-      RootDirectory="$(ProjectDir)"
-      LoggerRootDirectory="$(ParentProjectDir)"
-      TargetPlatform="$(XNAContentPipelineTargetPlatform)"
-      TargetProfile="$(XNAContentPipelineTargetProfile)"
-      XactProjects="@(XACTContent)"
-      XnaFrameworkVersion="$(XnaFrameworkVersion)">
-      <Output ItemName="_XNAIntermediateXactFiles" TaskParameter="IntermediateFiles"/>
-      <Output ItemName="XNAIntermediateContentFiles" TaskParameter="IntermediateFiles"/>
-      <Output ItemName="XNAOutputContentFiles" TaskParameter="OutputXactFiles"/>
-      <Output ItemName="XNARebuiltContentFiles" TaskParameter="RebuiltXactFiles"/>
-      <Output ItemName="_AllBuiltXactFiles" TaskParameter="OutputXactFiles"/>
-      <Output ItemName="_AddBuiltXactFiles" TaskParameter="RebuiltXactFiles"/>
-    </BuildXact>
-
     <!-- Record the XACT cache files so they can be cleaned properly. -->
     <AssignTargetPath
       Files="@(_XNAIntermediateXactFiles)"

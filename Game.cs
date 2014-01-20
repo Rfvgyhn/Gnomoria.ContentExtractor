@@ -373,7 +373,8 @@ namespace Gnomoria.ContentExtractor
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(project)))
             using (var xml = XmlReader.Create(stream))
             {
-                var result = collection.LoadProject(xml).Build();
+                if (!collection.LoadProject(xml).Build())
+                    logger.Error("Error while packing images. See log for details");
             }
         }
     }
