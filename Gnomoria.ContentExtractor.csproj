@@ -139,7 +139,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DataManager.cs" />
+    <Compile Include="Data\DataTypeManagerFactory.cs" />
+    <Compile Include="Data\IDataTypeManager.cs" />
+    <Compile Include="Data\SkinManager.cs" />
     <Compile Include="Extensions\LoggerExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="NlogEventRedirector.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
