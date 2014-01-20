@@ -4,7 +4,8 @@
 * Pack Gnomoria skins
 
 ##Requirements
-* .NET 4 Full ([web](http://www.microsoft.com/downloads/details.aspx?FamilyID=9cfb2d51-5ff4-4491-b0e5-b386f32c0992&displaylang=en) | [standalone](http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=0a391abd-25c1-4fc0-919f-b21f31ab88b7))
+* XNA 4.0 Redist ([standalone installer](http://www.microsoft.com/en-us/download/details.aspx?id=20914)) - Already installed if you have Gnomoria installed.
+* .NET 4 Full ([web installer](http://www.microsoft.com/downloads/details.aspx?FamilyID=9cfb2d51-5ff4-4491-b0e5-b386f32c0992&displaylang=en) | [standalone installer](http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=0a391abd-25c1-4fc0-919f-b21f31ab88b7))
 * In order to unpack the data files, you will need to provide a de-obfuscated `gnomorialib.dll` file. You manually copy this file to the `lib` folder. This isn't required if you just want to pack/unpack skins.
 
 ## Switches
@@ -32,3 +33,5 @@
 
 ## Other
 When unpacking data or skins, you may leave out the `-i` parameter if you have the Steam version installed in the default location. The tool will look in `%ProgramFiles(x86)%\Steam\steamapps\common\Gnomoria\Content\` (defined in `app.config` which you can change) for the proper files.
+
+Depending on your browser/OS options, you may have to "unblock" the .zip file before extracting it if you want to pack a skin. This is because the file's zone identifier is "internet." See http://superuser.com/a/590798/24745 for more details.
