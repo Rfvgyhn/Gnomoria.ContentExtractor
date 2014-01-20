@@ -212,8 +212,18 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Target Name="PostBuildMacros">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="Targets" />
+    </GetAssemblyIdentity>
+  </Target>
   <PropertyGroup>
+    <PostBuildEventDependsOn>
+      $(PostBuildEventDependsOn);
+      PostBuildMacros;
+    </PostBuildEventDependsOn>
     <PostBuildEvent>move /Y "$(TargetDir)*.dll" "$(TargetDir)lib\"
+echo @(Targets->'%(Version)') &gt;"$(TargetDir)version.txt"
 
 if $(ConfigurationName) == Debug (
     move /Y "$(TargetDir)*.xml" "$(TargetDir)lib\"
