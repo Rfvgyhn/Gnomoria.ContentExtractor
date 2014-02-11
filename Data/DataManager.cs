@@ -29,41 +29,23 @@ namespace Gnomoria.ContentExtractor.Data
 
         public void Unpack(string sourcePath, string destinationPath)
         {
-            var contentRoot = content.RootDirectory = Path.GetDirectoryName(sourcePath);
-            var typesToLoad = new List<string>
-            {
-                "GameLibrary.{0}def[], gnomorialib",
-                "GameLibrary.{0}property[], gnomorialib",
-                "GameLibrary.{0}[], gnomorialib",
-                "GameLibrary.{0}topic[], gnomorialib"
-            };
-
-            var files = new DirectoryInfo(contentRoot).EnumerateFiles("*.xnb", SearchOption.AllDirectories);
+            content.RootDirectory = Path.GetDirectoryName(sourcePath);
+            var files = new DirectoryInfo(content.RootDirectory).EnumerateFiles("*.xnb", SearchOption.AllDirectories);
             var load = content.GetType().GetMethod("Load");
             
             foreach (var file in files)
             {
                 var fileName = Path.GetFileNameWithoutExtension(file.Name);
-                Type type = null;
-
                 logger.Debug("Unpacking '{0}'", fileName);
-                foreach (var typeName in typesToLoad)
-                {
-                    var overridenType = typeOverrides.ContainsKey(fileName) ? typeOverrides[fileName] : fileName;
-                    var t = string.Format(typeName, overridenType);
-                    type = Type.GetType(t, false, true);
-
-                    if (type != null)
-                        break;
-                }
+                Type type = GetType(fileName);
 
                 if (type == null)
                 {
-                    logger.Warn("Can't resolve {0}", fileName);
+                    logger.Warn("Couldn't resolve {0}", fileName);
                     continue;
                 }
 
-                var path = file.FullName.Substring(contentRoot.Length + 1).Split('.')[0];
+                var path = file.FullName.Substring(content.RootDirectory.Length + 1).Split('.')[0];
 
                 try
                 {
@@ -80,6 +62,30 @@ namespace Gnomoria.ContentExtractor.Data
                     logger.Error("Error loading {0}", fileName);
                 }
             }
+        }
+
+        private Type GetType(string fileName)
+        {
+            var typesToTry = new List<string>
+            {
+                "GameLibrary.{0}def[], gnomorialib",
+                "GameLibrary.{0}property[], gnomorialib",
+                "GameLibrary.{0}[], gnomorialib",
+                "GameLibrary.{0}topic[], gnomorialib"
+            };
+            Type type = null;
+
+            foreach (var typeName in typesToTry)
+            {
+                var overridenType = typeOverrides.ContainsKey(fileName) ? typeOverrides[fileName] : fileName;
+                var t = string.Format(typeName, overridenType);
+                type = Type.GetType(t, false, true);
+
+                if (type != null)
+                    break;
+            }
+
+            return type;
         }
     }
 }
