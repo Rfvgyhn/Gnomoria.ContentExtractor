@@ -37,19 +37,12 @@ namespace Gnomoria.ContentExtractor.Data
             {
                 var fileName = Path.GetFileNameWithoutExtension(file.Name);
                 logger.Debug("Unpacking '{0}'", fileName);
-                Type type = GetType(fileName);
-
-                if (type == null)
-                {
-                    logger.Warn("Couldn't resolve {0}", fileName);
-                    continue;
-                }
 
                 var path = file.FullName.Substring(content.RootDirectory.Length + 1).Split('.')[0];
 
                 try
                 {
-                    var data = load.MakeGenericMethod(new Type[] { type }).Invoke(content, new object[] { path });
+                    var data = content.Load<object>(path);
                     logger.Info("Serializing {0}", fileName);
                     var dir = Path.GetDirectoryName(Path.Combine(destinationPath, path));
                     Directory.CreateDirectory(dir);
@@ -62,30 +55,6 @@ namespace Gnomoria.ContentExtractor.Data
                     logger.Error("Error loading {0}", fileName);
                 }
             }
-        }
-
-        private Type GetType(string fileName)
-        {
-            var typesToTry = new List<string>
-            {
-                "GameLibrary.{0}def[], gnomorialib",
-                "GameLibrary.{0}property[], gnomorialib",
-                "GameLibrary.{0}[], gnomorialib",
-                "GameLibrary.{0}topic[], gnomorialib"
-            };
-            Type type = null;
-
-            foreach (var typeName in typesToTry)
-            {
-                var overridenType = typeOverrides.ContainsKey(fileName) ? typeOverrides[fileName] : fileName;
-                var t = string.Format(typeName, overridenType);
-                type = Type.GetType(t, false, true);
-
-                if (type != null)
-                    break;
-            }
-
-            return type;
         }
     }
 }

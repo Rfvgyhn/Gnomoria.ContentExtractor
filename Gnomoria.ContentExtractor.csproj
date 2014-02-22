@@ -70,11 +70,6 @@
     <Reference Include="CommandLine">
       <HintPath>packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="gnomorialib, Version=0.8.36.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\gnomorialib.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
@@ -214,6 +209,7 @@
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
@@ -228,7 +224,7 @@
       PostBuildMacros;
     </PostBuildEventDependsOn>
     <PostBuildEvent>move /Y "$(TargetDir)*.dll" "$(TargetDir)lib\"
-echo @(Targets->'%(Version)') &gt;"$(TargetDir)version.txt"
+echo @(Targets->'%25(Version)') &gt;"$(TargetDir)version.txt"
 
 if $(ConfigurationName) == Debug (
     move /Y "$(TargetDir)*.xml" "$(TargetDir)lib\"
