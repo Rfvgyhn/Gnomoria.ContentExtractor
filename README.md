@@ -6,7 +6,7 @@
 ##Requirements
 * XNA 4.0 Redist ([standalone installer](http://www.microsoft.com/en-us/download/details.aspx?id=20914)) - Already installed if you have Gnomoria installed.
 * .NET 4 Full ([web installer](http://www.microsoft.com/downloads/details.aspx?FamilyID=9cfb2d51-5ff4-4491-b0e5-b386f32c0992&displaylang=en) | [standalone installer](http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=0a391abd-25c1-4fc0-919f-b21f31ab88b7))
-* In order to unpack the data files, you will need to provide a de-obfuscated `gnomorialib.dll` file. You manually copy this file to the `lib` folder. This isn't required if you just want to pack/unpack skins.
+* In order to unpack the data files, you will need to provide a `gnomorialib.dll` file. You manually copy this file from your game installation folder to the `lib` folder. This isn't required if you just want to pack/unpack skins.
 
 ## Switches
 | Switch   | Alias | Value       | Description         | Required |

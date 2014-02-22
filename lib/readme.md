@@ -1,1 +1,1 @@
-In order to unpack data, you will need to manually place a de-obfuscated `gnomorialib.dll` here. It should be named `gnomorialib.dll`.
+In order to unpack data, you will need to manually place a `gnomorialib.dll` here.
