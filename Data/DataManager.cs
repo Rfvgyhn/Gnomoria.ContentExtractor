@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -47,8 +48,8 @@ namespace Gnomoria.ContentExtractor.Data
                     var dir = Path.GetDirectoryName(Path.Combine(destinationPath, path));
                     Directory.CreateDirectory(dir);
 
-                    using (var stream = File.CreateText(Path.Combine(dir, fileName + ".json")))
-                        stream.Write(JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented));
+                    using (var stream = File.CreateText(Path.Combine(dir, fileName + ".js")))
+                        stream.Write(JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented, new StringEnumConverter()));
                 }
                 catch
                 {
