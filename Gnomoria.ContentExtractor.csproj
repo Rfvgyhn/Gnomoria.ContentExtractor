@@ -70,6 +70,9 @@
     <Reference Include="CommandLine">
       <HintPath>packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
     </Reference>
+    <Reference Include="de4dot.cui">
+      <HintPath>lib\de4dot.cui.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
@@ -107,10 +110,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.6.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
-      <HintPath>packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
+      <HintPath>packages\NLog.2.1.0\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="SevenZipSharp">
       <HintPath>packages\SevenZipSharp.0.64\lib\SevenZipSharp.dll</HintPath>
@@ -134,22 +137,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentProject.cs" />
     <Compile Include="Data\DataManager.cs" />
     <Compile Include="Data\DataTypeManagerFactory.cs" />
     <Compile Include="Data\IDataTypeManager.cs" />
     <Compile Include="Data\SkinManager.cs" />
-    <Compile Include="Extensions\LoggerExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="NlogEventRedirector.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
     <Compile Include="Extensions\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -165,10 +163,10 @@
     <None Include="lib\readme.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="README.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\ContentProject.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -201,15 +199,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
@@ -224,11 +214,14 @@
       PostBuildMacros;
     </PostBuildEventDependsOn>
     <PostBuildEvent>move /Y "$(TargetDir)*.dll" "$(TargetDir)lib\"
-echo @(Targets->'%(Version)') &gt;"$(TargetDir)version.txt"
+copy /Y "$(ProjectDir)lib\*.dll" "$(TargetDir)lib\"
+copy /Y "$(ProjectDir)lib\*.exe" "$(TargetDir)lib\"
+echo @(Targets->'%25(Version)') &gt;"$(TargetDir)version.txt"
 
 if $(ConfigurationName) == Debug (
     move /Y "$(TargetDir)*.xml" "$(TargetDir)lib\"
-    copy /Y "$(ProjectDir)lib\gnomorialib.dll" "$(TargetDir)lib\gnomorialib.dll"
+) else (
+    del "$(TargetDir)lib\gnomorialib.dll"
 )</PostBuildEvent>
   </PropertyGroup>
   <!--

@@ -1,17 +1,11 @@
-﻿using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Logging;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using NLog;
 using SevenZip;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Xml;
 
 namespace Gnomoria.ContentExtractor.Data
 {
@@ -41,8 +35,8 @@ namespace Gnomoria.ContentExtractor.Data
 
             logger.Info("Packing skin '{0}'", sourcePath);
 
-            var workingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var skinRoot = Path.Combine(workingDir, "temp");
+            var tempDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "Gnomoria.ContentExtractor", Guid.NewGuid().ToString())).FullName;
+            var skinRoot = Path.Combine(tempDir, "skinRoot");
             Directory.CreateDirectory(skinRoot);
 
             logger.Debug("Packing Skin.xml");
@@ -59,7 +53,7 @@ namespace Gnomoria.ContentExtractor.Data
             logger.Debug("Packing images");
             var images = Directory.GetFiles(imagesDir, "*.png", SearchOption.AllDirectories);
             var destination = Path.Combine(skinRoot, "Images");
-            PackSkinImages(images, imagesDir, destination);
+            PackSkinImages(images, imagesDir, destination, tempDir);
 
             logger.Debug("Copying fonts");
             // since fonts arent unpacked by this tool, just copy the XNBs
@@ -98,12 +92,7 @@ namespace Gnomoria.ContentExtractor.Data
             zipper.CompressDirectory(skinRoot, destinationPath, true);
 
             logger.Debug("Cleaning up temp files");
-            Directory.Delete(skinRoot, true);
-            Directory.Delete(Path.Combine(workingDir, "obj"), true);
-            Directory.Delete(Path.Combine(sourcePath, "Imagesobj"), true);
-
-            foreach (var file in Directory.GetFiles(workingDir, "cachefile-*-targetpath.txt"))
-                File.Delete(file);
+            Directory.Delete(tempDir, true);
         }
 
         public void Unpack(string sourcePath, string destinationPath)
@@ -185,38 +174,16 @@ namespace Gnomoria.ContentExtractor.Data
             Directory.Delete(tempDir, true);
         }
 
-        private void PackSkinImages(string[] images, string imagesDir, string destination)
+        private void PackSkinImages(string[] images, string imagesDir, string destination, string tempDir)
         {
-            Directory.CreateDirectory(destination);
-            var props = new Dictionary<string, string>
-            {
-                { "Configuration", "Release" },
-                { "ProjectDir", imagesDir },
-                { "OutputPath", destination }
-            };
+            var project = new ContentProject(destination, tempDir);
+            project.AddReference("Microsoft.Xna.Framework.Content.Pipeline.TextureImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL");
 
-            var nlogLogger = new ConfigurableForwardingLogger
-            {
-                BuildEventRedirector = new NlogEventRedirector()
-            };
-            var collection = new ProjectCollection(props, new List<ILogger> { nlogLogger }, ToolsetDefinitionLocations.Registry);
-            var compileFormat = @"
-    <Compile Include=""{0}"">
-      <Name>{1}</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>";
+            foreach (var file in images)
+                project.AddItem(file, "TextureImporter", Path.GetFileName(file), Path.GetFileNameWithoutExtension(file), "TextureProcessor");
 
-            var resources = images.Aggregate(new StringBuilder(), (sb, i) => sb.AppendFormat(compileFormat, i, Path.GetFileNameWithoutExtension(i)))
-                                  .ToString();
-
-            var project = string.Format(Resource.ContentProject, resources);
-            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(project)))
-            using (var xml = XmlReader.Create(stream))
-            {
-                if (!collection.LoadProject(xml).Build())
-                    logger.Error("Error while packing images. See log for details");
-            }
+            if (!project.Build())
+                logger.Error("Error while packing images. See log for details");
         }
     }
 }
