@@ -213,7 +213,7 @@
     <PostBuildEvent>move /Y "$(TargetDir)*.dll" "$(TargetDir)lib\"
 copy /Y "$(ProjectDir)lib\*.dll" "$(TargetDir)lib\"
 copy /Y "$(ProjectDir)lib\*.exe" "$(TargetDir)lib\"
-echo @(Targets->'%25(Version)') &gt;"$(TargetDir)version.txt"
+echo @(Targets->'%(Version)') &gt;"$(TargetDir)version.txt"
 
 if $(ConfigurationName) == Debug (
     move /Y "$(TargetDir)*.xml" "$(TargetDir)lib\"
